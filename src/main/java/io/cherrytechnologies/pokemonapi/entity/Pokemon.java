@@ -1,15 +1,17 @@
 package io.cherrytechnologies.pokemonapi.entity;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Pokemon{
+public class Pokemon {
     @Id
     public int id;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     public Set<Ability> abilities;
     public int base_experience;
     @OneToMany
@@ -20,7 +22,6 @@ public class Pokemon{
     @OneToMany
     public Set<Move> moves;
     public String name;
-    public int order;
     @ManyToOne
     @JoinColumn(name = "species_id")
     public Species species;
@@ -100,14 +101,6 @@ public class Pokemon{
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(int order) {
-        this.order = order;
     }
 
     public Species getSpecies() {

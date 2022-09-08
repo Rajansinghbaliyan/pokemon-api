@@ -2,8 +2,8 @@ server:
   port: ${SPRING_DOCKER_PORT}
 spring:
   datasource:
-    username: ${MYSQLDB_USER}
-    password: ${MYSQLDB_ROOT_PASSWORD}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_ROOT_PASSWORD}
     url: ${DB_URL}
   #    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
