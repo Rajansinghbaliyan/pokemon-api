@@ -20,5 +20,5 @@ spring:
       enabled: ${DEV_TOOLS}
 logging:
   level:
+    io.cherrytechnologies: debug
     web: ${WEB_LOGGING}
-    io: debug

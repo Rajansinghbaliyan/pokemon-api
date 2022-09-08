@@ -1,9 +1,6 @@
 package io.cherrytechnologies.pokemonapi.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 // import com.fasterxml.jackson.databind.ObjectMapper; // version 2.11.1
 // import com.fasterxml.jackson.annotation.JsonProperty; // version 2.11.1
@@ -12,6 +9,7 @@ Root root = om.readValue(myJsonString, Root.class); */
 @Entity
 public class Ability {
     @Id
+    @GeneratedValue
     public long id;
     @ManyToOne
     @JoinColumn(name = "ability_id")

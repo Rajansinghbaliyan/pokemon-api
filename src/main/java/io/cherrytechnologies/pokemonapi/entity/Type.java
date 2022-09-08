@@ -1,13 +1,11 @@
 package io.cherrytechnologies.pokemonapi.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class Type {
     @Id
+    @GeneratedValue
     public long id;
     public int slot;
     @ManyToOne

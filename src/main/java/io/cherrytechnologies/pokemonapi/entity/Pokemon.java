@@ -1,16 +1,13 @@
 package io.cherrytechnologies.pokemonapi.entity;
 
-import org.hibernate.annotations.Cascade;
-
 import javax.persistence.*;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 public class Pokemon {
     @Id
-    public int id;
+    @GeneratedValue
+    public long id;
     @OneToMany(cascade = CascadeType.ALL)
     public Set<Ability> abilities;
     public int base_experience;
@@ -31,11 +28,11 @@ public class Pokemon {
     public Set<Type> types;
     public int weight;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -133,6 +130,25 @@ public class Pokemon {
 
     public void setWeight(int weight) {
         this.weight = weight;
+    }
+
+    @Override
+    public String toString() {
+        return "Pokemon{" +
+                "id=" + id +
+                ", abilities=" + abilities +
+                ", base_experience=" + base_experience +
+                ", forms=" + forms +
+                ", height=" + height +
+                ", is_default=" + is_default +
+                ", location_area_encounters='" + location_area_encounters + '\'' +
+                ", moves=" + moves +
+                ", name='" + name + '\'' +
+                ", species=" + species +
+                ", stats=" + stats +
+                ", types=" + types +
+                ", weight=" + weight +
+                '}';
     }
 }
 

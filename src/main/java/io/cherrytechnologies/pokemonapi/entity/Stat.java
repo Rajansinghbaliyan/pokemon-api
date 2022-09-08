@@ -1,13 +1,11 @@
 package io.cherrytechnologies.pokemonapi.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class Stat {
     @Id
+    @GeneratedValue
     public long id;
     public int base_stat;
     public int effort;
