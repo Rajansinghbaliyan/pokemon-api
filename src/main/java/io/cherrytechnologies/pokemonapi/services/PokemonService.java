@@ -23,11 +23,8 @@ public class PokemonService {
     public Pokemon getPokemonById(long id) {
         return repository
                 .findById(id)
-                .map(pokemon -> {
-                    getLogger(className).get().info("Getting form DB by ID" + id);
-                    return pokemon;
-                })
-                .orElse(getPokemonByIdFormNet(id));
+                .orElseGet(() ->getPokemonByIdFormNet(id));
+
     }
 
     private Pokemon getPokemonByIdFormNet(long id) {
@@ -45,9 +42,7 @@ public class PokemonService {
     }
 
     public Pokemon save(Pokemon pokemon) {
-        getLogger(className)
-                .get()
-                .info("Saving to DB ID:" + pokemon.getId());
+        getLogger(className).get().info("Saving to DB ID:" + pokemon.getId());
         return repository
                 .save(pokemon);
     }

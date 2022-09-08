@@ -6,27 +6,25 @@ import java.util.Set;
 @Entity
 public class Pokemon {
     @Id
-    @GeneratedValue
     public long id;
-    @OneToMany(cascade = CascadeType.ALL)
-    public Set<Ability> abilities;
+    public String name;
     public int base_experience;
-    @OneToMany(cascade = CascadeType.ALL)
-    public Set<Form> forms;
     public int height;
     public boolean is_default;
     public String location_area_encounters;
+    public int weight;
+    @OneToOne(cascade = CascadeType.ALL)
+    public Species species;
+    @OneToMany(cascade = CascadeType.ALL)
+    public Set<Ability> abilities;
+    @OneToMany(cascade = CascadeType.ALL)
+    public Set<Form> forms;
     @OneToMany(cascade = CascadeType.ALL)
     public Set<Move> moves;
-    public String name;
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "species_id")
-    public Species species;
-    @OneToMany
     public Set<Stat> stats;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     public Set<Type> types;
-    public int weight;
 
     public long getId() {
         return id;
