@@ -5,6 +5,7 @@ import io.cherrytechnologies.pokemonapi.entity.repository.PokemonRepository;
 import io.cherrytechnologies.pokemonapi.utils.GenericLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import static io.cherrytechnologies.pokemonapi.services.PokemonConstants.BASE_URL;
@@ -38,14 +39,12 @@ public class PokemonService {
 
         getLogger(className).get().debug(String.valueOf(pokemon));
 
-        ((Runnable) () -> {
-            save(pokemon);
-        }).run();
+        save(pokemon);
 
         return pokemon;
     }
 
-    private Pokemon save(Pokemon pokemon) {
+    public Pokemon save(Pokemon pokemon) {
         getLogger(className)
                 .get()
                 .info("Saving to DB ID:" + pokemon.getId());

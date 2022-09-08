@@ -8,7 +8,7 @@ public class Move {
     @Id
     @GeneratedValue
     public long id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "move_id")
     public Move2 move;
 

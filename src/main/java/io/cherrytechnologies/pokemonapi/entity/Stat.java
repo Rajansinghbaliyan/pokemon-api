@@ -9,7 +9,7 @@ public class Stat {
     public long id;
     public int base_stat;
     public int effort;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "stat_id")
     public Stat2 stat;
 

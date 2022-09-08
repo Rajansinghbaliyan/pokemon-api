@@ -11,15 +11,15 @@ public class Pokemon {
     @OneToMany(cascade = CascadeType.ALL)
     public Set<Ability> abilities;
     public int base_experience;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     public Set<Form> forms;
     public int height;
     public boolean is_default;
     public String location_area_encounters;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     public Set<Move> moves;
     public String name;
-    @ManyToOne
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "species_id")
     public Species species;
     @OneToMany

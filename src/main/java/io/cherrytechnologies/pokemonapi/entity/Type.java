@@ -8,7 +8,7 @@ public class Type {
     @GeneratedValue
     public long id;
     public int slot;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "type_id")
     public Type2 type;
 

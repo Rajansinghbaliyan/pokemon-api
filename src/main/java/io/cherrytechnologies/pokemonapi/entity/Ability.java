@@ -11,7 +11,7 @@ public class Ability {
     @Id
     @GeneratedValue
     public long id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ability_id")
     public Ability2 ability;
     public boolean is_hidden;
