@@ -12,5 +12,5 @@ public interface PokemonRepository extends JpaRepository<Pokemon, Long> {
     Optional<Pokemon> getById(long id);
     Optional<Pokemon> getByName(String name);
 
-    List<Optional<Pokemon>> findAllByIdBetween(long start,long end);
+    List<Pokemon> findAllByIdBetween(long start,long end);
 }
