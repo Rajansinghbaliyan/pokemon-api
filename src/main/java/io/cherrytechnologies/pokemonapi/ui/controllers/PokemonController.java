@@ -3,7 +3,6 @@ package io.cherrytechnologies.pokemonapi.ui.controllers;
 import io.cherrytechnologies.pokemonapi.io.entity.Pokemon;
 import io.cherrytechnologies.pokemonapi.services.PokemonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,8 @@ public class PokemonController {
             @RequestParam(defaultValue = "10") int end) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(pokemonService.getAll(start, end));
+                .body(pokemonService
+                        .getAll(start, end));
 
     }
 }
