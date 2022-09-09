@@ -1,7 +1,6 @@
-package io.cherrytechnologies.pokemonapi.entity;
+package io.cherrytechnologies.pokemonapi.io.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 
 @Entity
 public class Move {

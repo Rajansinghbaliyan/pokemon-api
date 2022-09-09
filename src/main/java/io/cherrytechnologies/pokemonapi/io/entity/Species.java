@@ -1,11 +1,11 @@
-package io.cherrytechnologies.pokemonapi.entity;
+package io.cherrytechnologies.pokemonapi.io.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Ability2 {
+public class Species {
     @Id
     @GeneratedValue
     public long id;
@@ -36,5 +36,3 @@ public class Ability2 {
         this.url = url;
     }
 }
-
-
