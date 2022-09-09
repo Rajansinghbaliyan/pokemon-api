@@ -32,24 +32,26 @@ public class PokemonService {
     }
 
     public List<Pokemon> getAll(long start, long end) {
-        List<Long> idsInDb = new ArrayList<>((int) (end - start));
+        List<Long> idsInDb = new ArrayList<>();
         List<Pokemon> pokemonList = repository
                 .findAllByIdBetween(start, end);
+
+        if (pokemonList.size() == end - start + 1)
+            return pokemonList;
 
         pokemonList
                 .forEach(pokemon -> idsInDb.add(pokemon.id));
 
         IntStream.range((int) start, (int) end + 1)
                 .parallel()
-                .filter(number -> !idsInDb.contains(number))
+                .filter(id -> !idsInDb.contains((long)id))
                 .mapToObj(this::getPokemonByIdFormNet)
                 .forEach(optionalPokemon ->
                         optionalPokemon
-                                .ifPresent(pokemon ->
-                                        pokemonList.add((int) getCorrectIndex(start, pokemon.id), pokemon))
+                                .ifPresent(pokemonList::add)
                 );
 
-        getLogger(className).get().info(String.format("Ids found in Db: %s",idsInDb.toString()));
+        getLogger(className).get().info(String.format("Ids found in Db: %s", idsInDb));
 
         return pokemonList;
     }
