@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  postgres_db:
+    image: postgres:10.8-alpine
+    restart: "no"
+    env_file: .env
+    environment:
+      - POSTGRES_PASSWORD=$POSTGRES_ROOT_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DATABASE
+    ports:
+      - $POSTGRES_LOCAL_PORT:$POSTGRES_DOCKER_PORT
+    volumes:
+      - pokemon:/var/lib/postgresql/data
+  app:
+    depends_on:
+      - postgres_db
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    restart: "no"
+    env_file: .env
+    ports:
+      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+    environment:
+      DB_URL: "jdbc:postgresql://postgres_db:$POSTGRES_DOCKER_PORT/$POSTGRES_DATABASE"
+    volumes:
+      - .m2:/root/.m2
+      - ./src:/app/src
+      - ./target:/app/target
+    stdin_open: true
+    tty: true
+volumes:
+  pokemon:

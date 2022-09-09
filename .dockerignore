@@ -1,0 +1,11 @@
+.gitignore
+.git
+.dockerignore
+docker-compose.yml
+Dockerfile
+Dockerfile-dev
+HELP.md
+.mvn
+mvnw
+mvnw.cmd
+pokemon-api.iml
