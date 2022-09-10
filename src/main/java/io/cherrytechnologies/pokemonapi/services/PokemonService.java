@@ -8,8 +8,10 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static io.cherrytechnologies.pokemonapi.services.PokemonConstants.BASE_URL;
@@ -34,7 +36,10 @@ public class PokemonService {
     public List<Pokemon> getAll(long start, long end) {
         List<Long> idsInDb = new ArrayList<>();
         List<Pokemon> pokemonList = repository
-                .findAllByIdBetween(start, end);
+                .findAllByIdBetween(start, end)
+                .parallelStream()
+                .sorted(Comparator.comparing(Pokemon::getId))
+                .collect(Collectors.toList());
 
         if (pokemonList.size() == end - start + 1)
             return pokemonList;
@@ -53,7 +58,10 @@ public class PokemonService {
 
         getLogger(className).get().info(String.format("Ids found in Db: %s", idsInDb));
 
-        return pokemonList;
+        return pokemonList
+                .parallelStream()
+                .sorted(Comparator.comparing(Pokemon::getId))
+                .collect(Collectors.toList());
     }
 
     public Pokemon save(Pokemon pokemon) {

@@ -7,6 +7,8 @@ import io.cherrytechnologies.pokemonapi.ui.controllers.models.response.PokemonDe
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+
 @Service
 public class PokemonAnalyticsService {
     @Autowired
@@ -15,12 +17,19 @@ public class PokemonAnalyticsService {
 
     public MessageResponse<PokemonDescription> getHeaviestPokemon() {
 
+//        Pokemon fetchedPokemon = repository
+//                .findAll()
+//                .parallelStream()
+//                .reduce((first, second) ->
+//                        first.weight > second.weight ? first : second
+//                )
+//                .orElseThrow(() -> new RuntimeException("Server Error"));
+
+        // More efficient way could also use maxBy
         Pokemon fetchedPokemon = repository
                 .findAll()
                 .parallelStream()
-                .reduce((first, second) ->
-                        first.weight > second.weight ? first : second
-                )
+                .max(Comparator.comparing(Pokemon::getWeight))
                 .orElseThrow(() -> new RuntimeException("Server Error"));
 
 
