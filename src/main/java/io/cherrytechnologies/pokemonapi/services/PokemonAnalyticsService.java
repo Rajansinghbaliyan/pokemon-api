@@ -4,13 +4,13 @@ import io.cherrytechnologies.pokemonapi.io.entity.Pokemon;
 import io.cherrytechnologies.pokemonapi.io.repository.PokemonRepository;
 import io.cherrytechnologies.pokemonapi.ui.controllers.models.response.MessageResponse;
 import io.cherrytechnologies.pokemonapi.ui.controllers.models.response.PokemonDescription;
+import io.cherrytechnologies.pokemonapi.utils.dataclasses.PokemonCategoriesBy;
 import io.cherrytechnologies.pokemonapi.utils.dataclasses.PokemonMaxDescription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PokemonAnalyticsService {
@@ -93,6 +93,34 @@ public class PokemonAnalyticsService {
         return new MessageResponse<Map<String, PokemonMaxDescription>>()
                 .setMessage("Maxed Pokemon for each attribute")
                 .setData(resultMap);
+    }
+
+    public MessageResponse<Map<String,
+            Collection<PokemonCategoriesBy>>> getPokemonByCategories() {
+        return new MessageResponse<Map<String,
+                Collection<PokemonCategoriesBy>>>()
+                .setMessage("Pokemon grouped in categories")
+                .setData(
+                        repository
+                                .findAll()
+                                .parallelStream()
+                                .flatMap(pokemon -> pokemon.types
+                                        .parallelStream()
+                                        .map(type ->
+                                                PokemonCategoriesBy
+                                                        .factory()
+                                                        .setCategoryType(type.type.name)
+                                                        .setId(pokemon.id)
+                                                        .setName(pokemon.name)
+                                                        .setBaseExperience(pokemon.base_experience))
+                                )
+                                .collect(
+                                        Collectors
+                                                .groupingBy(PokemonCategoriesBy::getCategoryType,
+                                                        Collectors.toCollection(TreeSet::new)
+                                                )
+                                )
+                );
     }
 }
 

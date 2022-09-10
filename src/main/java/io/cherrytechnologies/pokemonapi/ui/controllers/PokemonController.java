@@ -20,7 +20,7 @@ public class PokemonController {
 
     private final String className = String.valueOf(PokemonController.class);
 
-    @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Pokemon> getPokemonById(@PathVariable long id) {
         return ResponseEntity
                 .status(HttpStatus.OK)

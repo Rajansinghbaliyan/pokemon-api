@@ -1,22 +1,40 @@
 package io.cherrytechnologies.pokemonapi.utils.dataclasses;
 
-public class PokemonCategoriesBy {
-    private Long id;
+import io.cherrytechnologies.pokemonapi.utils.RestUtils;
+
+import java.util.Comparator;
+
+
+public class PokemonCategoriesBy implements Comparator<PokemonCategoriesBy>, Comparable<PokemonCategoriesBy> {
+    private String id;
     private String name;
+    private String categoryType;
+
+
     private int baseExperience;
 
-    private PokemonCategoriesBy(){}
+    private PokemonCategoriesBy() {
+    }
 
-    public static PokemonCategoriesBy factory(){
+    public String getCategoryType() {
+        return categoryType;
+    }
+
+    public PokemonCategoriesBy setCategoryType(String categoryType) {
+        this.categoryType = categoryType;
+        return this;
+    }
+
+    public static PokemonCategoriesBy factory() {
         return new PokemonCategoriesBy();
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
     public PokemonCategoriesBy setId(Long id) {
-        this.id = id;
+        this.id = RestUtils.getBasePokemonUrl(id);
         return this;
     }
 
@@ -36,5 +54,15 @@ public class PokemonCategoriesBy {
     public PokemonCategoriesBy setBaseExperience(int baseExperience) {
         this.baseExperience = baseExperience;
         return this;
+    }
+
+    @Override
+    public int compare(PokemonCategoriesBy o1, PokemonCategoriesBy o2) {
+        return Integer.compare(o1.baseExperience, o2.baseExperience);
+    }
+
+    @Override
+    public int compareTo(PokemonCategoriesBy o) {
+        return Integer.compare(this.baseExperience,o.baseExperience);
     }
 }
