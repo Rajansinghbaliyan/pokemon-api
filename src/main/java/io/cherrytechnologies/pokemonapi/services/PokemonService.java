@@ -1,15 +1,22 @@
 package io.cherrytechnologies.pokemonapi.services;
 
-import io.cherrytechnologies.pokemonapi.entity.Pokemon;
-import io.cherrytechnologies.pokemonapi.entity.repository.PokemonRepository;
-import io.cherrytechnologies.pokemonapi.utils.GenericLogger;
+import io.cherrytechnologies.pokemonapi.io.entity.Pokemon;
+import io.cherrytechnologies.pokemonapi.io.repository.PokemonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static io.cherrytechnologies.pokemonapi.services.PokemonConstants.BASE_URL;
 import static io.cherrytechnologies.pokemonapi.utils.GenericLogger.getLogger;
+import static io.cherrytechnologies.pokemonapi.utils.RestUtils.urlBuilder;
 
 @Service
 public class PokemonService {
@@ -23,27 +30,69 @@ public class PokemonService {
     public Pokemon getPokemonById(long id) {
         return repository
                 .findById(id)
-                .orElseGet(() ->getPokemonByIdFormNet(id));
-
+                .orElseGet(() -> getPokemonByIdFormNet(id).orElse(null));
     }
 
-    private Pokemon getPokemonByIdFormNet(long id) {
-        String url = BASE_URL + id;
+    public List<Pokemon> getAll(long start, long end) {
+        List<Long> idsInDb = new ArrayList<>();
+        List<Pokemon> pokemonList = repository
+                .findAllByIdBetween(start, end)
+                .parallelStream()
+                .sorted(Comparator.comparing(Pokemon::getId))
+                .collect(Collectors.toList());
 
-        getLogger(className).get().info("Sending GET url = " + url);
+        if (pokemonList.size() == end - start + 1)
+            return pokemonList;
 
-        Pokemon pokemon = template.getForObject(url, Pokemon.class);
+        pokemonList
+                .forEach(pokemon -> idsInDb.add(pokemon.id));
 
-        getLogger(className).get().debug(String.valueOf(pokemon));
+        IntStream.range((int) start, (int) end + 1)
+                .parallel()
+                .filter(id -> !idsInDb.contains((long)id))
+                .mapToObj(this::getPokemonByIdFormNet)
+                .forEach(optionalPokemon ->
+                        optionalPokemon
+                                .ifPresent(pokemonList::add)
+                );
 
-        save(pokemon);
+        getLogger(className).get().info(String.format("Ids found in Db: %s", idsInDb));
 
-        return pokemon;
+        return pokemonList
+                .parallelStream()
+                .sorted(Comparator.comparing(Pokemon::getId))
+                .collect(Collectors.toList());
     }
 
     public Pokemon save(Pokemon pokemon) {
         getLogger(className).get().info("Saving to DB ID:" + pokemon.getId());
         return repository
                 .save(pokemon);
+    }
+
+    private Optional<Pokemon> getPokemonByIdFormNet(long id) {
+        String url = urlBuilder(BASE_URL, id);
+        getLogger(className).get().info("Sending GET url = " + url);
+
+        Optional<Pokemon> optionalPokemon = getFromNet(url);
+
+        optionalPokemon.ifPresent(this::save);
+
+        return optionalPokemon;
+    }
+
+    private Optional<Pokemon> getFromNet(String url) {
+        try {
+            Pokemon pokemon = template.getForObject(url, Pokemon.class);
+            return Optional.of(pokemon);
+        } catch (RestClientException e) {
+            getLogger(className).get().error(e.getMessage());
+            return Optional.empty();
+        }
+    }
+
+
+    private static long getCorrectIndex(long startId, long currentId) {
+        return currentId - startId;
     }
 }

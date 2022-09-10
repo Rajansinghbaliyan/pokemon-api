@@ -1,11 +1,11 @@
-package io.cherrytechnologies.pokemonapi.entity;
+package io.cherrytechnologies.pokemonapi.io.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Item {
+public class MoveLearnMethod {
     @Id
     @GeneratedValue
     public long id;
