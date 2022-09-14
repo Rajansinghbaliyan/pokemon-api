@@ -4,6 +4,7 @@ import io.cherrytechnologies.pokemonapi.io.entity.Pokemon;
 import io.cherrytechnologies.pokemonapi.io.repository.PokemonRepository;
 import io.cherrytechnologies.pokemonapi.ui.controllers.models.response.MessageResponse;
 import io.cherrytechnologies.pokemonapi.ui.controllers.models.response.PokemonDescription;
+import io.cherrytechnologies.pokemonapi.utils.dataclasses.PokemonAndType;
 import io.cherrytechnologies.pokemonapi.utils.dataclasses.PokemonCategoriesBy;
 import io.cherrytechnologies.pokemonapi.utils.dataclasses.PokemonMaxDescription;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,6 +122,31 @@ public class PokemonAnalyticsService {
                                                 )
                                 )
                 );
+    }
+
+    public MessageResponse<Map<String, List<PokemonAndType>>> getPokemonsGroupedByType() {
+
+        Map<String, List<PokemonAndType>> result = repository
+                .findAll()
+                .parallelStream()
+                .flatMap(pokemon -> pokemon
+                        .types
+                        .parallelStream()
+                        .map(types -> PokemonAndType
+                                .factory()
+                                .setType(types.type.getName())
+                                .setPokemonName(pokemon.getName())
+                                .setPokemonUrl(pokemon.getId())
+                        )
+                )
+                .collect(Collectors.groupingByConcurrent(
+                        PokemonAndType::getType,
+                        Collectors.toList()
+                ));
+
+        return new MessageResponse<Map<String, List<PokemonAndType>>>()
+                .setMessage("Pokemon grouped in their types")
+                .setData(result);
     }
 }
 

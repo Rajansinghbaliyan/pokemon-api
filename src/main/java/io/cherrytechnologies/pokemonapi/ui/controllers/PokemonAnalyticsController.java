@@ -3,6 +3,7 @@ package io.cherrytechnologies.pokemonapi.ui.controllers;
 import io.cherrytechnologies.pokemonapi.services.PokemonAnalyticsService;
 import io.cherrytechnologies.pokemonapi.ui.controllers.models.response.MessageResponse;
 import io.cherrytechnologies.pokemonapi.ui.controllers.models.response.PokemonDescription;
+import io.cherrytechnologies.pokemonapi.utils.dataclasses.PokemonAndType;
 import io.cherrytechnologies.pokemonapi.utils.dataclasses.PokemonCategoriesBy;
 import io.cherrytechnologies.pokemonapi.utils.dataclasses.PokemonMaxDescription;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import static io.cherrytechnologies.pokemonapi.utils.GenericLogger.getLogger;
@@ -37,15 +39,21 @@ public class PokemonAnalyticsController {
                         .getHeaviestPokemon());
     }
 
-    @GetMapping(path = "/maxed-pokemons",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MessageResponse<Map<String, PokemonMaxDescription>>> getMaxedOutPokemon(){
+    @GetMapping(path = "/maxed-pokemons", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MessageResponse<Map<String, PokemonMaxDescription>>> getMaxedOutPokemon() {
         return ResponseEntity
                 .ok(service.getMaxPokemonsForEachAttribute());
     }
 
     @GetMapping(path = "/by-categories")
-    public ResponseEntity<MessageResponse<Map<String,Collection<PokemonCategoriesBy>>>> getByCategories(){
+    public ResponseEntity<MessageResponse<Map<String, Collection<PokemonCategoriesBy>>>> getByCategories() {
         return ResponseEntity
                 .ok(service.getPokemonByCategories());
+    }
+
+    @GetMapping(path = "/grouped-by-type")
+    public ResponseEntity<MessageResponse<Map<String, List<PokemonAndType>>>> getGroupedByTypes() {
+        return ResponseEntity
+                .ok(service.getPokemonsGroupedByType());
     }
 }
